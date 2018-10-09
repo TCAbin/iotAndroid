@@ -13,10 +13,8 @@ import cn.com.gree.utils.translator.DeviceStatusTranslator;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service("DeviceDataService")
 public class DeviceDataServiceImpl implements DeviceDataService {
@@ -49,7 +47,7 @@ public class DeviceDataServiceImpl implements DeviceDataService {
                 deviceData.setUM1_0(Integer.valueOf(map.get("UM1_0")));
                 deviceData.setUM2_5(Integer.valueOf(map.get("UM2_5")));
                 deviceData.setUM5(Integer.valueOf(map.get("UM5")));
-                deviceData.setUM10(Integer.valueOf(map.get("PM10")));
+                deviceData.setUM10(Integer.valueOf(map.get("UM10")));
                 d.setDeviceName(map.get("name"));
                 deviceData.setDevice(d);
             }else {
@@ -57,7 +55,8 @@ public class DeviceDataServiceImpl implements DeviceDataService {
             }
         } catch (Exception e) {
             tokenDataService.refreshToken();
-            System.out.println("设置设备" + d.getDeviceId() + "数据失败。" + e.getMessage());
+            System.out.println("时间 : " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()) +
+                    " ,设置设备" + d.getDeviceId() + "数据失败。" + e.getMessage());
         }
         return deviceData;
     }
@@ -71,29 +70,45 @@ public class DeviceDataServiceImpl implements DeviceDataService {
     }
 
     @Override
-    public Map<String, String> getLatestDeviceDataByBarCode(String barCode) {
-        Map<String, String> obj = new HashMap<>();
+    public Map<String,Object> getLatestDeviceDataByBarCode(String barCode) {
+        Map<String, Object> obj = null;
         List<DeviceData> dataList = getAllLatestDeviceData();
         for(DeviceData deviceData : dataList){
             if(barCode.equals(deviceData.getDevice().getBarCode())){
+                obj = new HashMap<>();
                 obj.put("area",deviceData.getDevice().getArea());
                 obj.put("deviceName",deviceData.getDevice().getDeviceName());
                 obj.put("deviceStatus",DeviceStatusTranslator.intToChinese(deviceData.getDeviceStatus()));
                 obj.put("eventTime",DateTransform.toDateStr(deviceData.getEventTime()));
                 obj.put("temperature",deviceData.getTemperature() + Symbol.TEMPERATURE_UNIT);
                 obj.put("humidity",deviceData.getHumidity() + Symbol.HUMIDITY_UNIT);
-                obj.put("PM1_0",deviceData.getPM1_0() + Symbol.PM_UNIT);
-                obj.put("PM2_5",deviceData.getPM2_5() + Symbol.PM_UNIT);
-                obj.put("PM10",deviceData.getPM10() + Symbol.PM_UNIT);
-                obj.put("UM0_3",deviceData.getUM0_3() + Symbol.UM_UNIT);
-                obj.put("UM0_5",deviceData.getUM0_5() + Symbol.UM_UNIT);
-                obj.put("UM1_0",deviceData.getUM1_0() + Symbol.UM_UNIT);
-                obj.put("UM2_5",deviceData.getUM2_5() + Symbol.UM_UNIT);
-                obj.put("UM5",deviceData.getUM5() + Symbol.UM_UNIT);
-                obj.put("UM10",deviceData.getUM10() + Symbol.UM_UNIT);
+                Map<String,String> map = new LinkedHashMap<>();
+                map.put("PM1.0",deviceData.getPM1_0() + Symbol.PM_UNIT);
+                map.put("PM2.5",deviceData.getPM2_5() + Symbol.PM_UNIT);
+                map.put("PM10",deviceData.getPM10() + Symbol.PM_UNIT);
+                map.put("≥0.3um",deviceData.getUM0_3() + Symbol.UM_UNIT);
+                map.put("≥0.5um",deviceData.getUM0_5() + Symbol.UM_UNIT);
+                map.put("≥1.0um",deviceData.getUM1_0() + Symbol.UM_UNIT);
+                map.put("≥2.5um",deviceData.getUM2_5() + Symbol.UM_UNIT);
+                map.put("≥5.0um",deviceData.getUM5() + Symbol.UM_UNIT);
+                map.put("≥10um",deviceData.getUM10() + Symbol.UM_UNIT);
+                obj.put("info",map);
+                obj.put("range",getRange(deviceData.getDevice()));
                 break;
             }
         }
         return obj;
+    }
+
+
+    private Map<String,Integer> getRange(Devices devices){
+        Map<String,Integer> map = new HashMap<>();
+        map.put("minHumidityRange",devices.getMinHumidityRange());
+        map.put("maxHumidityRange",devices.getMaxHumidityRange());
+        map.put("minPM",devices.getMinPM());
+        map.put("maxPM",devices.getMaxPM());
+        map.put("maxUM",devices.getMaxUM());
+        map.put("minUM",devices.getMinUM());
+        return map;
     }
 }

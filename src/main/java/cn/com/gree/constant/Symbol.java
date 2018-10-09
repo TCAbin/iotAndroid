@@ -9,7 +9,7 @@ public class Symbol {
     public static final String HUMIDITY_UNIT = "%RH";
 
     /** PM单位 */
-    public static final String PM_UNIT = "ug/m^3";
+    public static final String PM_UNIT = "ug/m³";
 
     /** 颗粒数单位 */
     public static final String UM_UNIT = "个";

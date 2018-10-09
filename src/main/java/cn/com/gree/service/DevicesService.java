@@ -19,6 +19,14 @@ public interface DevicesService {
      * @date 2018/8/8 8:03
      * 3.4需求 查询本地设备
      */
-    List<Map<String,String>> getLocalAllDevices();
+    List<Map<String,Object>> getLocalAllDevices();
+
+
+    /**
+     * @author Abin
+     * @date 2018/9/22 11:23
+     * 修改设备地区
+     */
+    int updateArea(String area,String barCode);
 
 }

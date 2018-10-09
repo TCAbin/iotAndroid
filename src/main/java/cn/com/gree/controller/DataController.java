@@ -25,9 +25,9 @@ public class DataController {
     @RequestMapping(value = "getDataByBarCode",method = RequestMethod.GET)
     public Result getLatestDeviceDataByBarCode(String BarCode){
         Map map = dataService.getLatestDeviceDataByBarCode(BarCode);
-        if(map.size() == 0){
+        if(map == null){
             return new Result(false,"获取设备数据失败");
         }
-        return new Result(true,"",map);
+        return new Result(true,"查询成功",map);
     }
 }

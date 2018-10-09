@@ -4,12 +4,12 @@ import cn.com.gree.dao.BaseDao;
 import cn.com.gree.dao.utils.Pagination;
 import cn.com.gree.dao.utils.QueryCondition;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 

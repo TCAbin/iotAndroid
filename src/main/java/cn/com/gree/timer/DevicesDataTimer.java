@@ -34,6 +34,7 @@ public class DevicesDataTimer {
         setDeviceData();
     }
 
+
     /**
      * @author Abin
      * @date 2018/8/7 17:49
@@ -42,17 +43,24 @@ public class DevicesDataTimer {
     private void setDeviceData(){
         List<Devices> devices = devicesService.getAllDevices();
         List<DeviceData> result = new ArrayList<>();
+        boolean flag = true;
         for(Devices d : devices) {
-            DeviceData dd = deviceDataService.getDeviceDataFromInterface(d);
-            if(dd != null) {
-                result.add(dd);
+            if(d.isEnable()){
+                DeviceData dd = deviceDataService.getDeviceDataFromInterface(d);
+                if(dd != null) {
+                    result.add(dd);
+                }else{
+                    flag = false;
+                    break;
+                }
             }
         }
-        if(result.size() == devices.size()){
+        if(flag){
             for(DeviceData deviceData : result){
                 baseDao.update(deviceData);
             }
         }
+        result.clear();
     }
 
 }

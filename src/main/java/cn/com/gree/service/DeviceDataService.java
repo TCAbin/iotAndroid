@@ -28,6 +28,6 @@ public interface DeviceDataService {
      * @date 2018/8/8 8:39
      * 3.3查询需求 根据条码值查询该机最新一条数据
      */
-    Map<String,String> getLatestDeviceDataByBarCode(String barCode);
+    Map<String,Object> getLatestDeviceDataByBarCode(String barCode);
 
 }

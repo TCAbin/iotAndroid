@@ -90,7 +90,7 @@ public class DataCollector {
         data.clear();
         data.put("name",name);
         data.put("eventTime",eventTime);
-        data.put("temperature",String.valueOf(deviceData.get("temperature")));
+        data.put("temperature",coverTemperature(String.valueOf(deviceData.get("temperature"))));
         data.put("humidity", String.valueOf(deviceData.get("humidity")));
         data.put("PM1_0", String.valueOf(deviceData.get("pm1_0")));
         data.put("PM2_5", String.valueOf(deviceData.get("pm2_5")));
@@ -127,4 +127,10 @@ public class DataCollector {
         return data;
     }
 
+
+    private static String coverTemperature(String temperature){
+        Integer tem = Integer.valueOf(temperature);
+        String str = String.valueOf((tem - 400) * 0.1);
+        return str.substring(0,str.indexOf(".") + 2);
+    }
 }

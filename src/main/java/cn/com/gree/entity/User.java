@@ -14,10 +14,6 @@ public class User {
     @Column(length = 30)
     private String userName;
 
-    /** 登录密码 */
-    @Column(length = 30)
-    private String loginPassWord;
-
     /** 设置密码 */
     @Column(length = 30)
     private String optionPassWord;
@@ -36,14 +32,6 @@ public class User {
 
     public void setUserName(String userName) {
         this.userName = userName;
-    }
-
-    public String getLoginPassWord() {
-        return loginPassWord;
-    }
-
-    public void setLoginPassWord(String loginPassWord) {
-        this.loginPassWord = loginPassWord;
     }
 
     public String getOptionPassWord() {

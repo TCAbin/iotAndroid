@@ -31,24 +31,58 @@ public class DevicesServiceImpl implements DevicesService {
     }
 
     @Override
-    public List<Map<String,String>> getLocalAllDevices() {
+    public List<Map<String,Object>> getLocalAllDevices() {
         List<DeviceData> deviceDataList = dataService.getAllLatestDeviceData();
-        List<Map<String,String>> mapList = new ArrayList<>();
-        Map<String,String> map = null;
+        List<Map<String,Object>> mapList = null;
+        Map<String,Object> map = null;
+        Map<String,String> dataMap = null;
+        List<Object> list = null;
         if(deviceDataList != null && deviceDataList.size() != 0){
-            map = new HashMap<>();
+            mapList = new ArrayList<>();
             for(DeviceData deviceData : deviceDataList){
-                map.put("area",deviceData.getDevice().getArea());
-                map.put("device_name",deviceData.getDevice().getDeviceName());
+                Devices devices = deviceData.getDevice();
+                if(!devices.isEnable()){
+                    continue;
+                }
+                map = new HashMap<>();
+                list = new ArrayList<>();
+                map.put("area",devices.getArea());
+                map.put("device_name",devices.getDeviceName());
                 map.put("device_status", DeviceStatusTranslator.intToChinese(deviceData.getDeviceStatus()));
                 map.put("eventTime",DateTransform.toDateStr(deviceData.getEventTime()));
-                map.put("temperature",deviceData.getTemperature() + Symbol.TEMPERATURE_UNIT);
-                map.put("humidity",deviceData.getHumidity() + Symbol.HUMIDITY_UNIT);
-                map.put("PM2_5",deviceData.getPM2_5() + Symbol.PM_UNIT);
+                map.put("barCode",devices.getBarCode());
+                dataMap = new HashMap<>();
+                dataMap.put("key","temperature");
+                dataMap.put("value",deviceData.getTemperature() + Symbol.TEMPERATURE_UNIT);
+                list.add(dataMap);
+                dataMap = new HashMap<>();
+                dataMap.put("key","humidity");
+                dataMap.put("value",deviceData.getHumidity() + Symbol.HUMIDITY_UNIT);
+                list.add(dataMap);
+                dataMap = new HashMap<>();
+                dataMap.put("key","PM2.5");
+                dataMap.put("value",deviceData.getPM2_5() + Symbol.PM_UNIT);
+                list.add(dataMap);
+                map.put("info",list);
                 mapList.add(map);
             }
         }
         return mapList;
+    }
+
+    @Override
+    public int updateArea(String area, String barCode) {
+        StringBuilder sql = new StringBuilder(" select d from Devices d where d.area = '" + area + "' and enable = true ");
+        List<Devices> devicesList = baseDao.getByJpql(sql.toString());
+        if(devicesList != null && devicesList.size() != 0){
+            return 1;
+        }
+        sql.setLength(0);
+        sql.append(" select d from Devices d where d.barCode = '").append(barCode).append("' ");
+        Devices devices = (Devices) baseDao.getSingleResultByJpql(sql.toString());
+        devices.setArea(area);
+        baseDao.update(devices);
+        return 0;
     }
 
 }
