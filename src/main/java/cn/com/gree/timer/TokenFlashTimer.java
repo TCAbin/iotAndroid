@@ -6,6 +6,12 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
+/**
+ * @author Abin
+ * @date 2018/8/7 14:30
+ * token定时器，由于华为平台token有效期为一个小时
+ * 故每小时刷新token
+ */
 @Component
 public class TokenFlashTimer {
 

@@ -1,5 +1,10 @@
 package cn.com.gree.utils;
 
+/**
+ * @author Abin
+ * @date 2018/8/7 14:20
+ * 数据返回类，用于格式化返回数据
+ */
 public class Result {
 
     /** 标志 */

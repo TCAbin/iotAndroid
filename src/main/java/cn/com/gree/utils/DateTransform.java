@@ -4,7 +4,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
+/**
+ * @author Abin
+ * @date 2018/8/7 14:23
+ * 日期转换器，用于处理日期问题
+ */
 public class DateTransform {
 
     // 接口日期转换器

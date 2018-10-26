@@ -12,6 +12,13 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Abin
+ * @date 2018/8/7 14:31
+ * 数据定时获取，数据获取保存在本地数据库，
+ * 作为数据副本，历史记录等等
+ * 数据每五分钟获取一次
+ */
 @Component
 public class DevicesDataTimer {
 

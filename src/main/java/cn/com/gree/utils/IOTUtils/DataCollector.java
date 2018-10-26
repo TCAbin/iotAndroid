@@ -8,11 +8,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Abin
+ * @date 2018/8/7 14:25
+ * 数据获取接口，从华为平台处获取所需要的数据
+ * 该数据属于原始数据，整合处理获取对应设备ID的温湿度、PM、UM值
+ */
 public class DataCollector {
 
     /** https校验 */
     private static HttpsUtil httpsUtil = null;
 
+    /**
+     * @author Abin
+     * @date 2018/8/7 14:27
+     * 初始化https的验证
+     */
     static {
         verifyHttps();
     }
@@ -20,7 +31,7 @@ public class DataCollector {
     /**
      * @author Abin
      * @date 2018/8/7 15:58
-     * Https验证
+     * Https函数
      */
     private static void verifyHttps(){
         httpsUtil = new HttpsUtil();
@@ -34,7 +45,7 @@ public class DataCollector {
     /**
      * @author 260145
      * @date 2018/6/27 16:16
-     * getToken
+     * getToken，获取访问华为接口的token
      */
     @SuppressWarnings("unchecked")
     public static String getToken(){
@@ -44,8 +55,8 @@ public class DataCollector {
 
         try {
             Map<String, String> paramLogin = new HashMap<>();
-            paramLogin.put("appId", appId);
-            paramLogin.put("secret", secret);
+            paramLogin.put("appId", appId); // 对应项目Id
+            paramLogin.put("secret", secret); // 密钥
             StreamClosedHttpResponse responseLogin = httpsUtil.doPostFormUrlEncodedGetStatusLine(urlLogin, paramLogin);
 
             Map<String, String> data = new HashMap<>();
@@ -62,7 +73,7 @@ public class DataCollector {
     /**
      * @author 260145
      * @date 2018/6/26 13:39
-     * 调用远程接口
+     * 调用远程接口,或许所需的数据
      */
     @SuppressWarnings("unchecked")
     public static Map<String,String> getRemoteData(String deviceId,String accessToken) throws Exception {
@@ -102,6 +113,7 @@ public class DataCollector {
         data.put("UM5", String.valueOf(deviceData.get("num_5_0")));
         data.put("UM10", String.valueOf(deviceData.get("num_10")));
 
+        /* 设备状态 */
         switch (status){
             case "ONLINE" : {
                 data.put("status","1");
@@ -128,6 +140,11 @@ public class DataCollector {
     }
 
 
+    /**
+     * @author Abin
+     * @date 2018/10/26 14:29
+     * 由于华为保存的不是摄氏度，需要转换
+     */
     private static String coverTemperature(String temperature){
         Integer tem = Integer.valueOf(temperature);
         String str = String.valueOf((tem - 400) * 0.1);

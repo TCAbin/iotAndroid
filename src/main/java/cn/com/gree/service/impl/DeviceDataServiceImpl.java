@@ -25,6 +25,13 @@ public class DeviceDataServiceImpl implements DeviceDataService {
     @Resource(name = "TokenDataService")
     private TokenDataService tokenDataService;
 
+    /**
+     * @author Abin
+     * @date 2018/8/7 14:35
+     * 根据设备ID，从华为平台获取对应的设备最新的一条数据
+     * 访问华为平台时，需要带上token
+     * 访问不成功，则直接刷新token
+     */
     @Override
     public DeviceData getDeviceDataFromInterface(Devices d) {
         DeviceData deviceData = null;
@@ -61,6 +68,11 @@ public class DeviceDataServiceImpl implements DeviceDataService {
         return deviceData;
     }
 
+    /**
+     * @author Abin
+     * @date 2018/8/7 14:35
+     * 获取所有设备的最新数据
+     */
     @Override
     public List<DeviceData> getAllLatestDeviceData() {
         String str = " select o.* from t_device_data o , " +
@@ -69,6 +81,11 @@ public class DeviceDataServiceImpl implements DeviceDataService {
         return baseDao.getByNativeSQL(DeviceData.class,str);
     }
 
+    /**
+     * @author Abin
+     * @date 2018/8/7 14:34
+     * 根据barCode获取最新设备的数据
+     */
     @Override
     public Map<String,Object> getLatestDeviceDataByBarCode(String barCode) {
         Map<String, Object> obj = null;
@@ -82,17 +99,7 @@ public class DeviceDataServiceImpl implements DeviceDataService {
                 obj.put("eventTime",DateTransform.toDateStr(deviceData.getEventTime()));
                 obj.put("temperature",deviceData.getTemperature() + Symbol.TEMPERATURE_UNIT);
                 obj.put("humidity",deviceData.getHumidity() + Symbol.HUMIDITY_UNIT);
-                Map<String,String> map = new LinkedHashMap<>();
-                map.put("PM1.0",deviceData.getPM1_0() + Symbol.PM_UNIT);
-                map.put("PM2.5",deviceData.getPM2_5() + Symbol.PM_UNIT);
-                map.put("PM10",deviceData.getPM10() + Symbol.PM_UNIT);
-                map.put("≥0.3um",deviceData.getUM0_3() + Symbol.UM_UNIT);
-                map.put("≥0.5um",deviceData.getUM0_5() + Symbol.UM_UNIT);
-                map.put("≥1.0um",deviceData.getUM1_0() + Symbol.UM_UNIT);
-                map.put("≥2.5um",deviceData.getUM2_5() + Symbol.UM_UNIT);
-                map.put("≥5.0um",deviceData.getUM5() + Symbol.UM_UNIT);
-                map.put("≥10um",deviceData.getUM10() + Symbol.UM_UNIT);
-                obj.put("info",map);
+                obj.put("info",getInfo(deviceData));
                 obj.put("range",getRange(deviceData.getDevice()));
                 break;
             }
@@ -100,7 +107,31 @@ public class DeviceDataServiceImpl implements DeviceDataService {
         return obj;
     }
 
+    /**
+     * @author Abin
+     * @date 2018/8/7 14:17
+     * 获取对应设备PM um等数据
+     */
+    private Map<String,String> getInfo(DeviceData deviceData){
+        Map<String,String> map = new LinkedHashMap<>();
+        map.put("PM1.0",deviceData.getPM1_0() + Symbol.PM_UNIT);
+        map.put("PM2.5",deviceData.getPM2_5() + Symbol.PM_UNIT);
+        map.put("PM10",deviceData.getPM10() + Symbol.PM_UNIT);
+        map.put("≥0.3um",deviceData.getUM0_3() + Symbol.UM_UNIT);
+        map.put("≥0.5um",deviceData.getUM0_5() + Symbol.UM_UNIT);
+        map.put("≥1.0um",deviceData.getUM1_0() + Symbol.UM_UNIT);
+        map.put("≥2.5um",deviceData.getUM2_5() + Symbol.UM_UNIT);
+        map.put("≥5.0um",deviceData.getUM5() + Symbol.UM_UNIT);
+        map.put("≥10um",deviceData.getUM10() + Symbol.UM_UNIT);
+        return map;
+    }
 
+
+    /**
+     * @author Abin
+     * @date 2018/8/7 14:18
+     * 获取温湿度、PM、UM范围值
+     */
     private Map<String,Integer> getRange(Devices devices){
         Map<String,Integer> map = new HashMap<>();
         map.put("minHumidityRange",devices.getMinHumidityRange());

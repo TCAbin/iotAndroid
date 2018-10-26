@@ -1,5 +1,10 @@
 package cn.com.gree.utils.translator;
 
+/**
+ * @author Abin
+ * @date 2018/8/7 14:24
+ * 翻译器，对状态码进行翻译成中文，用于前端展示
+ */
 public class DeviceStatusTranslator {
 
     /**

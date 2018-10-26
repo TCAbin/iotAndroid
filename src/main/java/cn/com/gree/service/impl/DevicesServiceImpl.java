@@ -30,6 +30,11 @@ public class DevicesServiceImpl implements DevicesService {
         return baseDao.getAll(Devices.class);
     }
 
+    /**
+     * @author Abin
+     * @date 2018/8/7 14:37
+     * 格式化本地最新数据
+     */
     @Override
     public List<Map<String,Object>> getLocalAllDevices() {
         List<DeviceData> deviceDataList = dataService.getAllLatestDeviceData();
@@ -70,6 +75,11 @@ public class DevicesServiceImpl implements DevicesService {
         return mapList;
     }
 
+    /**
+     * @author Abin
+     * @date 2018/8/7 14:38
+     * 修改地区
+     */
     @Override
     public int updateArea(String area, String barCode) {
         StringBuilder sql = new StringBuilder(" select d from Devices d where d.area = '" + area + "' and enable = true ");

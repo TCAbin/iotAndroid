@@ -16,6 +16,11 @@ public class TokenDataServiceImpl implements TokenDataService {
     @Resource(name = "BaseDao")
     private BaseDao baseDao;
 
+    /**
+     * @author Abin
+     * @date 2018/8/7 14:37
+     * 刷新token
+     */
     @Override
     public void refreshToken() {
         String token = DataCollector.getToken();

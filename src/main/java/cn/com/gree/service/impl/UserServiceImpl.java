@@ -14,6 +14,12 @@ public class UserServiceImpl implements UserService {
     @Resource(name = "BaseDao")
     private BaseDao baseDao;
 
+    /**
+     * @author Abin
+     * @date 2018/8/7 14:33
+     * 更改设备地区，需要隐私操作
+     * 故在地区更改的时候同时需要验证密码
+     */
     @Override
     public boolean verifyOptionPassword(String password) {
         List<User> users = baseDao.getAll(User.class);

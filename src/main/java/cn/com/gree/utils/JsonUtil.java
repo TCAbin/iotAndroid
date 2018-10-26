@@ -11,6 +11,11 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+/**
+ * @author Abin
+ * @date 2018/8/7 14:20
+ * json 格式化数据
+ */
 public class JsonUtil {
 
     private JsonUtil(){}
